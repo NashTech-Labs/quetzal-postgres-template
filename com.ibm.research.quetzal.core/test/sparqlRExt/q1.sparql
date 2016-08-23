@@ -1,0 +1,42 @@
+function testR (?a ?b -> ?c ?d ?e) language R { 
+	\SOP
+	
+	test1; 
+	\n
+	\t
+	"\thi\t\n"
+	test2; test3;
+	
+	\EOP
+}
+
+function testR1 (?aa ?bb -> ?cc ?dd) language RR { 
+	{
+	?d a :Drug .
+	?c a :Disease .
+	}
+}
+
+select ?d ?c ?p ?t where {
+
+{ ?d ?p ?t } union { ?c ?p ?t }
+
+{select ?d ?c ?p1 ?p2 ?pn ?outcome (count(*) as ?freq) where {
+?d a :Drug .
+?c a :Disease .
+
+{select (1 as ?outcome) where { ?d :treats ?c }} union
+{select (-1 as ?outcome) where { ?d :isbadfor ?c }} .
+
+{ ?d ?p1 ?c } union
+{ ?d ?p1 _:x . _:x ?p2 ?c } 
+
+BIND ( testR ( ?allgeos ?unemploymentRate ) AS ( ?allgeos ?forecastedUnemploymentRate ?avgForecastedRate )) 
+
+BIND ( testR1 ( ?allgeos ?unemploymentRate ) AS ( ?forecastedUnemploymentRate ?avgForecastedRate )) 
+
+}
+
+} filter (?predictedOutcome != ?outcome) }
+order by abs(?predictedOutcome - ?outcome)
+limit 100

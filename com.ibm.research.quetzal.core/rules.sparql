@@ -1,0 +1,69 @@
+
+
+PREFIX : <http://example.org/> 
+CONSTRUCT { ?x :S ?y }
+WHERE {
+  
+  	BIND (:a AS ?x) . BIND (:b AS ?y) .
+}
+
+###
+
+PREFIX : <http://example.org/> 
+CONSTRUCT { ?x :S ?y }
+WHERE {
+  ?x :R ?y .
+}
+
+###
+
+PREFIX : <http://example.org/> 
+CONSTRUCT { ?x a :OilDeclineBenefittingCompany }
+WHERE {
+  ?x a :Company ; :name ?name ; :name "name" ; :name3 _:mybnode .
+}
+
+###
+
+PREFIX : <http://example.org/> 
+CONSTRUCT { ?x a :OilDeclineBenefittingIndustry }
+WHERE {
+   ?x a :Industry ; :hasNAICSCode ?c.
+   { { ?c a :TravelTransportation } UNION 
+     { ?c a :AirlineTransportation } UNION 
+     { ?c a :RoadTransportation }
+   }
+}   
+
+###
+
+PREFIX : <http://example.org/> 
+
+CONSTRUCT {?n a :OilDeclineVulnerableIndustry}
+WHERE {
+	?n (<http://www.w3.org/2004/02/skos/core#broader>)* ?c . 
+} values ?c { <http://naicscodes/211> <http://naicscodes/213111>  <http://naicscodes/213112> <http://naicscodes/21114> <http://naicscodes/21115> <http://naicscodes/21116>
+}
+
+
+###
+
+PREFIX : <http://example.org/> 
+CONSTRUCT { ?x a :OilDeclineBenefittingCompany }
+WHERE {
+  ?x a :Company ; :connectedTo ?y. ?y a :OilDeclineBenefittingIndustry .
+  ?o :oilDecline ?od . FILTER ( ?od > 99999)
+}
+
+###
+PREFIX : <http://example.org/> 
+
+CONSTRUCT { ?x a :OilDeclineBenefittingInstrument }
+WHERE {
+  ?x a :FinantialInstrument; :connectedTo* ?y. ?y a :OilDeclineBenefittingIndustry .
+  ?o :oilDecline ?od . FILTER ( ?od > 99999)
+}
+
+
+
+
